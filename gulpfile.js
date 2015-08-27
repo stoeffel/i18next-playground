@@ -5,7 +5,8 @@ var gulp = require('gulp'),
     browserify = require('browserify'),
     watchify = require('watchify'),
     babel = require('babelify'),
-    eslint = require('gulp-eslint');
+    eslint = require('gulp-eslint'),
+    Server = require('karma').Server;
 
 function compile(watch) {
   var bundler = browserify('./src/main.js', { debug: true, standalone: 'i18next' }).transform(babel);
@@ -40,6 +41,19 @@ gulp.task('eslint', function () {
     }))
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
+});
+
+gulp.task('test', function (done) {
+  new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
+
+gulp.task('tdd', function (done) {
+  new Server({
+    configFile: __dirname + '/karma.conf.js'
+  }, done).start();
 });
 
 function watch() {

@@ -8,4 +8,4 @@ class ConsoleWrapper{
     }
 }
 
-exports = ConsoleWrapper; //set what can be imported from this file
+export default ConsoleWrapper; //set what can be imported from this file
