@@ -48,4 +48,4 @@ class I18n  extends EventEmitter {
   }
 }
 
-export default new I18n(); //set what can be imported from this file
+export default new I18n();
