@@ -1,4 +1,4 @@
-class LanguageUtil {
+class CodeUtil {
   constructor(detector, options) {
     this.detector = detector;
     this.options = options;
@@ -58,4 +58,4 @@ class LanguageUtil {
   }
 };
 
-export default LanguageUtil;
+export default CodeUtil;
