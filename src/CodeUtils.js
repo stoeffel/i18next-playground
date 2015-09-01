@@ -42,7 +42,7 @@ class CodeUtil {
       if (this.isWhitelisted(code)) {
         codes.push(code);
       } else {
-        this.logger.log('rejecting non-whitelisted language code: ' + code);
+        this.logger.warn('rejecting non-whitelisted language code: ' + code);
       }
     };
 
