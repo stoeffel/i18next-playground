@@ -1,9 +1,12 @@
+import baseLogger from './logger';
+
 class CodeUtil {
   constructor(detector, options) {
     this.detector = detector;
     this.options = options;
 
     this.whitelist = this.options.whitelist || false;
+    this.logger = baseLogger.create('codeUtils');
   }
 
   getLanguageFromCode(code) {
@@ -11,23 +14,23 @@ class CodeUtil {
 
     let specialCases = ['nb-NO', 'nn-NO', 'nb-no', 'nn-no'];
     let p = code.split('-');
-    return this.formatLanguageCode((specialCases.indexOf(code) > -1) ? p[1] : p[0]);
+    return this.formatLanguageCode((specialCases.indexOf(code) > -1) ? p[1].toLowerCase() : p[0]);
   }
 
   formatLanguageCode(code) {
     if (typeof code === 'string' && code.indexOf('-') > -1) {
       let p = code.split('-');
 
-      return this.lowerCaseLng ?
-        p[0].toLowerCase() +  '-' + p[1].toLowerCase() :
-        p[0].toLowerCase() +  '-' + p[1].toUpperCase();
+      if (this.options.cleanCode) return p[0].toLowerCase() +  '-' + p[1].toUpperCase();
+      if (this.options.lowerCaseCode) return p[0].toLowerCase() +  '-' + p[1].toLowerCase();
+      return code;
     } else {
-      return this.options.lowerCaseLng ? code.toLowerCase() : code;
+      return this.options.cleanCode || this.options.lowerCaseCode ? code.toLowerCase() : code;
     }
   }
 
   isWhitelisted(code) {
-    return (!this.whitelist || this.whitelist.indexOf(language) > -1) ? true : false;
+    return (!this.whitelist || this.whitelist.indexOf(code) > -1) ? true : false;
   }
 
   toResolveHierarchy(code, fallbackCode) {
@@ -35,11 +38,11 @@ class CodeUtil {
     if (typeof fallbackCode === 'string') fallbackCode = [fallbackCode];
 
     let codes = [];
-    function addCode(code) {
+    let addCode = (code) => {
       if (this.isWhitelisted(code)) {
         codes.push(code);
       } else {
-        logger.log('rejecting non-whitelisted language code: ' + code);
+        this.logger.log('rejecting non-whitelisted language code: ' + code);
       }
     };
 
@@ -51,7 +54,7 @@ class CodeUtil {
     }
 
     fallbackCode.forEach(fc => {
-      if (codes.indexOf(fc) < 0) codes.push(this.formatLanguageCode(fc));
+      if (codes.indexOf(fc) < 0) addCode(this.formatLanguageCode(fc));
     });
 
     return codes;

@@ -10,7 +10,7 @@ describe('i18next', () => {
   });
 
   describe('instance creation', () => {
-    describe('createInstance', () => {
+    describe('createInstance()', () => {
       let newInstance;
       before(() => {
         newInstance = i18next.createInstance({bar: 'foo'});
@@ -26,7 +26,7 @@ describe('i18next', () => {
       });
     });
 
-    describe('cloneInstance', () => {
+    describe('cloneInstance()', () => {
       let newInstance;
       before(() => {
         newInstance = i18next.cloneInstance({bar: 'foo'});
